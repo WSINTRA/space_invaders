@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Space Invaders</title>
+    <script type="text/javascript"
+    src="index.js"></script>
+      
+   
+    <style type="text/css">
+      canvas { 
+        background-color: #000;
+        border: 1px solid black;
+        display: block;
+        position: absolute;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0; }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var display, input, frames;
+      var alSprite, taSprite, ciSprite;
+      var aliens, dir, tank, bullet, cities;
+
+      function main() {
+        display = new Screen(510, 600);
+
+        input = new InputHandler();
+
+        var img = new Image();
+        img.addEventListener("load", function() {
+           alSprite = [
+                 [new Sprite(this, 0, 0, 22, 16), new Sprite(this, 0, 16, 22, 16)],
+                 [new Sprite(this, 22, 0 , 16, 16), new Sprite(this, 22, 16, 16, 16)],
+                 [new Sprite(this, 38, 0, 24, 16), new Sprite(this, 38, 16, 24, 16)]
+           ];
+           taSprite = new Sprite(this);
+           ciSprite = new Sprite(this);
+
+          init();
+          run();
+        })
+        img.src = "./invaders.png"
+      };
+
+      function init() {};
+
+      function run() {
+        var loop = function() {
+          update();
+          render();
+
+          window.requestAnimationFrame(loop, display.canvas)
+        };
+        window.requestAnimationFrame(loop, display.canvas)
+      };
+
+      function update() {};
+
+      function render() {
+        display.drawSprite(alSprite[0][0], 10, 10);
+
+      };
+
+      main();
+
+    </script>
+  </body>
+</html>
