@@ -27,7 +27,7 @@
       var aliens, dir, tank, bullet, cities;
 
       function main() {
-        display = new Screen(510, 600);
+        display = new Screen(504, 600);
 
         input = new InputHandler();
 
@@ -50,8 +50,15 @@
       function init() {
         frames = 0;
         spFrame = 0;
-        lvFrame = 60;
+        lvFrame = 30;
         dir = 1;
+        tank = {
+          sprite: taSprite,
+          x: (display.width - taSprite.w) / 2,
+          y: display.height - (30, + taSprite.h)
+        }
+
+        bullets = [];
 
         aliens = [];
         var rows = [1, 0, 0, 2, 2];
@@ -80,13 +87,42 @@
       };
 
       function update() {
+
+        if(input.isDown(37)) {//left
+          tank.x -=4;
+        }
+        if(input.isDown(39)) {//right
+          tank.x += 4
+        }
+        tank.x = Math.max(Math.min(tank.x, display.width - (30 + taSprite.w)), 30);
+
+        if(input.isPressed(32)) {//spacebar keycode
+          bullets.push(new Bullet(tank.x + 10, tank.y, -8, 2, 6, "#fff"));
+        }
+        for (var i = 0; i < bullets.length; i++) {
+          bullets[i].update();
+        }
+
+
         frames++;
         if (frames % lvFrame === 0) {
           spFrame = (spFrame + 1) % 2;
 
+          var _max = 30, _min = display.width;
+
           for (var i = 0; i < aliens.length; i++) {
             var a = aliens[i]
             a.x += 30 * (dir);
+
+            _max = Math.max(_max, a.x, + a.w);
+            _min = Math.min(_min, a.x);
+          }
+          if (_max > display.width - 30 || _min < 30){
+            dir *= -1
+            for (var i = 0; i < aliens.length; i++) {
+              aliens[i].x += 30 * dir;
+              aliens[i].y += 30;
+            }
           }
         }
       };
@@ -98,6 +134,14 @@
          var a = aliens[i];
          display.drawSprite(a.sprite[spFrame], a.x, a.y);
        }
+
+       display.ctx.save();
+       for (var i = 0; i < bullets.length; i++) {
+         display.drawBullet(bullets[i]);
+       }
+       display.ctx.restore();
+
+       display.drawSprite(tank.sprite, tank.x, tank.y);
       };
 
       main();
